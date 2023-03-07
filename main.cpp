@@ -12,12 +12,6 @@ class Player {
     char* position = nullptr;
     bool injured;
 
-    void setName(const char* name);
-    void setBirthYear(int birthYear);
-    void setHeight(float height);
-    void setPosition(const char* position);
-    void setInjured(bool injured);
-
 public:
     Player();
     Player(const char* name);
@@ -31,7 +25,15 @@ public:
     const char* getPosition();
     bool getInjured() const;
 
+    void setName(const char* name);
+    void setBirthYear(int birthYear);
+    void setHeight(float height);
+    void setPosition(const char* position);
+    void setInjured(bool injured);
+
     std::string toString();
+
+    Player& operator=(const Player& object);
 
     ~Player();
 };
@@ -144,6 +146,17 @@ std::string Player::toString() {
     return output;
 }
 
+Player &Player::operator=(const Player &object) {
+    if(this != &object) {
+        this->setName(object.name);
+        this->setBirthYear(object.birthYear);
+        this->setHeight(object.height);
+        this->setPosition(object.position);
+        this->setInjured(object.injured);
+    }
+    return *this;
+}
+
 class Team {
     static int idCount;
     const int teamId;
@@ -180,12 +193,17 @@ void testPlayerClass() {
     Player c("player c", 2003);
     Player d("player d", 2003, 1.97, "PG", true);
     Player e(d);
+    Player f = e;
+
+    e.setName("player e");
+    f.setName("player f");
 
     std::cout << a.toString() << '\n';
     std::cout << b.toString() << '\n';
     std::cout << c.toString() << '\n';
     std::cout << d.toString() << '\n';
     std::cout << e.toString() << '\n';
+    std::cout << f.toString() << '\n';
 }
 
 
