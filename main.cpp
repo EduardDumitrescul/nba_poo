@@ -35,6 +35,9 @@ public:
 
     Player& operator=(const Player& object);
 
+    friend std::ostream& operator <<(std::ostream& out, const Player &object);
+    friend std::istream& operator >>(std::istream& in, Player &object);
+
     ~Player();
 };
 int Player::idCount = 1000;
@@ -157,6 +160,40 @@ Player &Player::operator=(const Player &object) {
     return *this;
 }
 
+std::ostream &operator<<(std::ostream &out, const Player &object) {
+    out << "Player name: " << object.name << '\n';
+    out << "Player birth year: " << object.birthYear << '\n';
+    out << "Player height: " << object.height << '\n';
+    out << "Player position: " << object.position << '\n';
+    out << "Player injured: " << object.injured << '\n';
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Player &object) {
+    char* playerName = new char[200];
+    std::cout << "Insert player name: ";
+    in >> playerName;
+    object.setName(playerName);
+    int birthYear;
+    std::cout << "Insert player birth year: ";
+    in >> birthYear;
+    object.setBirthYear(birthYear);
+    float height;
+    std::cout << "Insert player height: ";
+    in >> height;
+    object.setHeight(height);
+    char* position = new char[20];
+    std::cout << "Insert player position: ";
+    in >> position;
+    object.setPosition(position);
+    bool injured;
+    std::cout << "Is player injured? [0/1]: ";
+    in >> injured;
+    object.setInjured(injured);
+
+    return in;
+}
+
 class Team {
     static int idCount;
     const int teamId;
@@ -204,6 +241,11 @@ void testPlayerClass() {
     std::cout << d.toString() << '\n';
     std::cout << e.toString() << '\n';
     std::cout << f.toString() << '\n';
+
+    Player player;
+    std::cin >> player;
+    std::cout << player << '\n';
+
 }
 
 
