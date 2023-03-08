@@ -16,7 +16,7 @@ public:
     Player();
     Player(const char* name);
     Player(const char* name, int birthYear);
-    Player(const char* name, int birthYear, float height, const char* position, bool injured = false);
+    Player(const char* name, int birthYear, float height, const char* position = "unknown", bool injured = false);
     Player(const Player& object);
 
     const char* getName();
