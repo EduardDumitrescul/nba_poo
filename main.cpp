@@ -198,10 +198,177 @@ class Team {
     static int idCount;
     const int teamId;
 
-    char* name;
-    int* lastFiveGamesRecord;
+    char* name = nullptr;
+    int gamesPlayed;
+    int* gamesRecord = nullptr;
     std::vector <Player> playerList;
+
+public:
+    Team();
+    Team(const char* name);
+    Team(const char* name, int gamesPlayed, const int* gamesRecord);
+    Team(const char* name, int gamesPlayed, const int* gamesRecord, std::vector <Player> players);
+    Team(const Team& object);
+
+    const char* getName();
+    int getGamesPlayed() const;
+    const int* getGamesRecord();
+    std::vector <Player> getPlayers();
+
+    void setName(const char* name);
+    void setGamesRecord(int gamesPlayed, const int* gamesRecord);
+    void setPlayerList(std::vector <Player> players);
+
+    std::string toString();
+
+    Team& operator=(const Team& object);
+
+    friend std::ostream& operator <<(std::ostream& out, const Team &object);
+    friend std::istream& operator >>(std::istream& in, Team &object);
+
+    ~Team();
 };
+
+int Team::idCount = 1000;
+
+const char *Team::getName() {
+    return this->name;
+}
+
+int Team::getGamesPlayed() const {
+    return this->gamesPlayed;
+}
+
+const int *Team::getGamesRecord() {
+    return this->gamesRecord;
+}
+
+std::vector<Player> Team::getPlayers() {
+    return this->playerList;
+}
+
+void Team::setName(const char *name) {
+    if(this->name != nullptr) {
+        delete[] this->name;
+    }
+    this->name = new char[strlen(name) + 1];
+    strcpy(this->name, name);
+}
+
+void Team::setGamesRecord(int gamesPlayed, const int *gamesRecord) {
+    this->gamesPlayed = gamesPlayed;
+    if(this->gamesRecord != nullptr) {
+        delete[] this->gamesRecord;
+    }
+    this->gamesRecord = new int[this->gamesPlayed];
+    for(int i = 0; i < this->gamesPlayed; i ++) {
+        this->gamesRecord[i] = gamesRecord[i];
+    }
+}
+
+void Team::setPlayerList(std::vector<Player> players) {
+    this->playerList = players;
+}
+
+Team::Team() : teamId(idCount++) {
+    this->setName("unkown");
+    this->setGamesRecord(0, {});
+    this->setPlayerList({});
+}
+
+Team::Team(const char *name) : teamId(idCount++) {
+    this->setName(name);
+    this->setGamesRecord(0, {});
+    this->setPlayerList({});
+}
+
+Team::Team(const char *name, int gamesPlayed, const int *gamesRecord) : teamId(idCount++) {
+    this->setName(name);
+    this->setGamesRecord(gamesPlayed, gamesRecord);
+    this->setPlayerList({});
+}
+
+Team::Team(const char *name, int gamesPlayed, const int *gamesRecord, std::vector<Player> players) : teamId(idCount++) {
+    this->setName(name);
+    this->setGamesRecord(gamesPlayed, gamesRecord);
+    this->setPlayerList(players);
+}
+
+Team::Team(const Team &object) : teamId(idCount++) {
+    this->setName(object.name);
+    this->setGamesRecord(object.gamesPlayed, object.gamesRecord);
+    this->setPlayerList(object.playerList);
+}
+
+std::string Team::toString() {
+    std::string output = this->name;
+    output += " ; gamesPlayed: " + std::to_string(this->gamesPlayed);
+    output += " ; playerCount: " + std::to_string(this->playerList.size());
+    return output;
+}
+
+Team &Team::operator=(const Team &object) {
+    if(this != &object) {
+        this->setName(object.name);
+        this->setGamesRecord(object.gamesPlayed, object.gamesRecord);
+        this->setPlayerList(object.playerList);
+    }
+    return *this;
+}
+
+std::ostream &operator<<(std::ostream &out, const Team &object) {
+    out << "Team name: " << object.name << '\n';
+    out << "Games Played: " << object.gamesPlayed << '\n';
+    out << "Games Record: " << (object.gamesPlayed == 0 ? "no games played" : "");
+    for(int i = 0; i < object.gamesPlayed; i ++)
+        out << object.gamesRecord[i] << ' ';
+    out << '\n';
+    out << "Number of Players: " << object.playerList.size() << '\n';
+    for(auto player: object.playerList) {
+        out << player.getName() << ' ';
+    }
+    out << '\n';
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Team &object) {
+    std::cout << "Insert team name: ";
+    char* name = new char[100];
+    in >> name;
+    object.setName(name);
+    if(name != nullptr) {
+        delete[] name;
+        name = nullptr;
+
+    }
+
+    std::cout << "Games Played: ";
+    in >> object.gamesPlayed;
+
+    int *record = new int[object.gamesPlayed];
+
+    for(int i = 0; i < object.gamesPlayed; i ++) {
+        std::cout << "Record for game " << i + 1 << ": ";
+        in >> record[i];
+    }
+    object.setGamesRecord(object.gamesPlayed, record);
+    if(record != nullptr) {
+        delete[] record;
+        record = nullptr;
+    }
+    return in;
+}
+
+Team::~Team() {
+    if(this->name != nullptr) {
+        delete[] this->name;
+        this->name = nullptr;
+    }
+    if(this->gamesRecord != nullptr) {
+        delete[] this->gamesRecord;
+        this->gamesRecord;
+    }
+}
 
 class Game {
     static int idCount;
@@ -245,11 +412,33 @@ void testPlayerClass() {
     Player player;
     std::cin >> player;
     std::cout << player << '\n';
-
 }
 
+void testTeamClass() {
+    Team a;
+    int* record = new int[2];
+    record[0] = -25, record[1] = 36;
+    Team b("team b");
+    Player player("player d", 2003, 1.97, "PG", true);
+    Team c("team c", 2, record, {player});
 
+    Team d(c);
+    Team e = d;
+
+    d.setName("team d");
+    e.setName("teams e");
+
+    std::cout << a.toString() << '\n';
+    std::cout << b.toString() << '\n';
+    std::cout << c.toString() << '\n';
+    std::cout << d.toString() << '\n';
+    std::cout << e.toString() << '\n';
+
+    Team team;
+    std::cin >> team;
+    std::cout << team << '\n';
+}
 int main() {
-    testPlayerClass();
+    testTeamClass();
     return 0;
 }
