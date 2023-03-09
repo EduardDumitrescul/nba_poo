@@ -37,6 +37,13 @@ public:
     std::string toString();
 
     Player& operator=(const Player& object);
+    Player& operator++();
+    Player& operator--();
+    friend bool operator<(const Player& object, const Player& other);
+    friend bool operator<=(const Player& object, const Player& other);
+    friend bool operator>(const Player& object, const Player& other);
+    friend bool operator>=(const Player& object, const Player& other);
+    friend bool operator==(const Player& object, const Player& other);
 
     friend std::ostream& operator <<(std::ostream& out, const Player &object);
     friend std::istream& operator >>(std::istream& in, Player &object);
@@ -169,6 +176,34 @@ Player &Player::operator=(const Player &object) {
     }
     return *this;
 }
+
+Player &Player::operator++() {
+    this->ovr ++;
+    this->ovr = std::min(this->ovr, 100);
+    return *this;
+}
+Player &Player::operator--() {
+    this->ovr --;
+    this->ovr = std::max(this->ovr, 40);
+    return *this;
+}
+
+bool operator<(const Player &object, const Player &other) {
+    return object.getOvr() < other.getOvr();
+}
+bool operator>(const Player &object, const Player &other) {
+    return object.getOvr() > other.getOvr();
+}
+bool operator<=(const Player &object, const Player &other) {
+    return object.getOvr() <= other.getOvr();
+}
+bool operator>=(const Player &object, const Player &other) {
+    return object.getOvr() >= other.getOvr();
+}
+bool operator==(const Player &object, const Player &other) {
+    return object.ovr == other.ovr and object.height == other.height and object.position == other.position;
+}
+
 
 std::ostream &operator<<(std::ostream &out, const Player &object) {
     out << "Player name: " << object.name << '\n';
