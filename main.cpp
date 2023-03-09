@@ -632,6 +632,7 @@ public:
     void setGames(const std::vector <Game*> &games);
 
     Season &operator =(const Season& object);
+    const Game* operator[](int index);
     friend std::ostream &operator<<(std::ostream &out, const Season& object);
     friend std::istream &operator>>(std::istream &in, Season& object);
 
@@ -685,6 +686,12 @@ Season &Season::operator=(const Season &object) {
         this->setGames(object.games);
     }
     return *this;
+}
+
+const Game *Season::operator[](int index) {
+    if(index >= this->games.size())
+        return nullptr;
+    return this->games[index];
 }
 
 std::ostream &operator<<(std::ostream &out, const Season &object) {
