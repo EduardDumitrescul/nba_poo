@@ -547,9 +547,99 @@ class Season {
     static int idCount;
     const int seasonId;
 
-    int startYear;
-    std::vector <Game> games;
+    int year;
+    std::vector <Game*> games;
+
+public:
+    Season();
+    Season(int year);
+    Season(int year, const std::vector <Game*> &games);
+    Season(const Season& object);
+
+    void addGame(Game *game);
+
+    int getYear();
+    const std::vector <Game*>& getGames();
+
+    void setYear(int year);
+    void setGames(const std::vector <Game*> &games);
+
+    Season &operator =(const Season& object);
+    friend std::ostream &operator<<(std::ostream &out, const Season& object);
+    friend std::istream &operator>>(std::istream &in, Season& object);
 };
+int Season::idCount = 1000;
+
+Season::Season(): seasonId(idCount++)  {
+    this->setYear(0);
+    this->setGames({});
+}
+
+Season::Season(int year): seasonId(idCount++) {
+    this->setYear(year);
+    this->setGames({});
+}
+
+Season::Season(int year, const std::vector<Game *> &games): seasonId(idCount++)  {
+    this->setYear(year);
+    this->setGames(games);
+}
+
+Season::Season(const Season &object): seasonId(idCount++)  {
+    this->setYear(object.year);
+    this->setGames(object.games);
+}
+
+void Season::addGame(Game *game) {
+    this->games.push_back(game);
+}
+
+int Season::getYear() {
+    return this->year;
+}
+
+const std::vector<Game *>& Season::getGames() {
+    return this->games;
+}
+
+void Season::setYear(int year) {
+    this->year = year;
+}
+
+void Season::setGames(const std::vector<Game *> &games) {
+    this->games = games;
+}
+
+Season &Season::operator=(const Season &object) {
+    if(this != &object) {
+        this->setYear(object.year);
+        this->setGames(object.games);
+    }
+    return *this;
+}
+
+std::ostream &operator<<(std::ostream &out, const Season &object) {
+    out << "Season Year: " << object.year << '\n';
+    out << "Season Games Count: " << object.games.size() << '\n';
+    for(auto game: object.games) {
+        out << game->toString() << '\n';
+    }
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Season &object) {
+    std::cout << "Insert Season Year: ";
+    in >> object.year;
+    std::cout << "Insert Games Count: ";
+    int gamesCount;
+    in >> gamesCount;
+    while(gamesCount--) {
+        Game *game = new Game();
+        in >> *game;
+        object.addGame(game);
+    }
+    return in;
+}
 
 
 void testPlayerClass() {
@@ -622,8 +712,21 @@ void testGameClass() {
     std::cout << a;
 }
 
+void testSeasonClass() {
+    Season a;
+    Season b(2003);
+    Season c(2023, {});
+    Season d(c);
+    d.setYear(201241);
+
+    std::cout << a << b << c << d;
+
+    Season s;
+    std::cin >> s;
+    std::cout << s;
+}
+
 int main() {
-    testTeamClass();
-    testGameClass();
+    testSeasonClass();
     return 0;
 }
