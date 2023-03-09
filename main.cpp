@@ -637,6 +637,9 @@ public:
     Season &operator =(const Season& object);
     const Game* operator[](int index);
     friend Season operator + (const Season& season, const Game& game);
+    friend Season operator + (const Game& game, const Season& season);
+    friend Season operator + (const Game& g1, const Game& g2);
+    friend Season operator + (const Season& s1, const Season& s2);
     friend std::ostream &operator<<(std::ostream &out, const Season& object);
     friend std::istream &operator>>(std::istream &in, Season& object);
 
@@ -726,8 +729,34 @@ std::istream &operator>>(std::istream &in, Season &object) {
 Season::~Season() = default;
 
 Season operator+(const Season &season, const Game &game) {
-    Season temp(season);
+    Season temp;
+    for(const auto& g: season.getGames())
+        temp.addGame(g);
     temp.addGame(game);
+    return temp;
+}
+
+Season operator+(const Game &game, const Season &season) {
+    Season temp;
+    for(const auto& g: season.getGames())
+        temp.addGame(g);
+    temp.addGame(game);
+    return temp;
+}
+
+Season operator+(const Game &g1, const Game &g2) {
+    Season temp;
+    temp.addGame(g1);
+    temp.addGame(g2);
+    return temp;
+}
+
+Season operator+(const Season &s1, const Season &s2) {
+    Season temp(s1);
+    std::vector <Game> games = s2.getGames();
+    for(const Game& game: games) {
+        temp.addGame(game);
+    }
     return temp;
 }
 
