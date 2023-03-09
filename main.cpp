@@ -9,6 +9,7 @@ class Player {
     char* name = nullptr;
     int birthYear{};
     float height{};
+    int ovr{};
     char* position = nullptr;
     bool injured{};
 
@@ -16,18 +17,20 @@ public:
     Player();
     Player(const char* name);
     Player(const char* name, int birthYear);
-    Player(const char* name, int birthYear, float height, const char* position = "unknown", bool injured = false);
+    Player(const char* name, int birthYear, float height, int ovr = 50, const char* position = "unknown", bool injured = false);
     Player(const Player& object);
 
     const char* getName();
     int getBirthYear() const;
     float getHeight() const;
+    int getOvr() const;
     const char* getPosition();
     bool getInjured() const;
 
     void setName(const char* name);
     void setBirthYear(int birthYear);
     void setHeight(float height);
+    void setOvr(int ovr);
     void setPosition(const char* position);
     void setInjured(bool injured);
 
@@ -44,6 +47,7 @@ int Player::idCount = 1000;
 Player::Player() : playerId(++idCount) {
     this->setName("unknown");
     this->setBirthYear(0);
+    this->setOvr(0);
     this->setHeight(0);
     this->setPosition("unknown");
     this->setInjured(false);
@@ -53,6 +57,7 @@ Player::Player(const char *name) : playerId(++idCount) {
     this->setName(name);
     this->setBirthYear(0);
     this->setHeight(0);
+    this->setOvr(0);
     this->setPosition("unknown");
     this->setInjured(false);
 }
@@ -61,14 +66,16 @@ Player::Player(const char *name, int birthYear) : playerId(++idCount) {
     this->setName(name);
     this->setBirthYear(birthYear);
     this->setHeight(0);
+    this->setOvr(0);
     this->setPosition("unknown");
     this->setInjured(false);
 }
 
-Player::Player(const char *name, int birthYear, float height, const char *position, bool injured): playerId(++idCount) {
+Player::Player(const char *name, int birthYear, float height, int ovr, const char *position, bool injured): playerId(++idCount) {
     this->setName(name);
     this->setBirthYear(birthYear);
     this->setHeight(height);
+    this->setOvr(ovr);
     this->setPosition(position);
     this->setInjured(injured);
 }
@@ -77,6 +84,7 @@ Player::Player(const Player &object) : playerId(++idCount) {
     this->setName(object.name);
     this->setBirthYear(object.birthYear);
     this->setHeight(object.height);
+    this->setOvr(object.ovr);
     this->setPosition(object.position);
     this->setInjured(object.injured);
 }
@@ -142,6 +150,7 @@ Player::~Player() {
 
 std::string Player::toString() {
     std::string output = this->name;
+    output += " " + std::to_string(this->ovr);
     output += " " + std::to_string(this->birthYear);
     output += " " + std::to_string(this->height);
     output += " " + (std::string)this->position;
@@ -153,6 +162,7 @@ Player &Player::operator=(const Player &object) {
     if(this != &object) {
         this->setName(object.name);
         this->setBirthYear(object.birthYear);
+        this->ovr = object.ovr;
         this->setHeight(object.height);
         this->setPosition(object.position);
         this->setInjured(object.injured);
@@ -162,6 +172,7 @@ Player &Player::operator=(const Player &object) {
 
 std::ostream &operator<<(std::ostream &out, const Player &object) {
     out << "Player name: " << object.name << '\n';
+    out << "Player's overall rating: " << object.ovr << '\n';
     out << "Player birth year: " << object.birthYear << '\n';
     out << "Player height: " << object.height << '\n';
     out << "Player position: " << object.position << '\n';
@@ -174,6 +185,8 @@ std::istream &operator>>(std::istream &in, Player &object) {
     std::cout << "Insert player name: ";
     in >> playerName;
     object.setName(playerName);
+    std::cout << "Insert player's ovr: ";
+    in >> object.ovr;
     int birthYear;
     std::cout << "Insert player birth year: ";
     in >> birthYear;
@@ -192,6 +205,14 @@ std::istream &operator>>(std::istream &in, Player &object) {
     object.setInjured(injured);
 
     return in;
+}
+
+int Player::getOvr() const {
+    return this->ovr;
+}
+
+void Player::setOvr(int ovr) {
+    this->ovr = ovr;
 }
 
 class Team {
@@ -390,8 +411,8 @@ public:
 
     const Team* getHomeTeam();
     const Team* getAwayTeam();
-    [[nodiscard]] int getHomeScore() const;
-    [[nodiscard]] int getAwayScore() const;
+    int getHomeScore() const;
+    int getAwayScore() const;
     const Player* getMvp();
 
     void setHomeTeam(Team* homeTeam);
@@ -668,7 +689,7 @@ void testPlayerClass() {
     Player a;
     Player b("player b");
     Player c("player c", 2003);
-    Player d("player d", 2003, 1.97, "PG", true);
+    Player d("player d", 2003, 1.97, 95, "PG", true);
     Player e(d);
     Player f = e;
 
@@ -692,7 +713,7 @@ void testTeamClass() {
     int* record = new int[2];
     record[0] = -25, record[1] = 36;
     Team b("team b");
-    Player player("player d", 2003, 1.97, "PG", true);
+    Player player("player d", 2003, 1.97, 95, "PG", true);
     Team c("team c", 2, record, {&player});
 
     Team d(c);
@@ -749,6 +770,6 @@ void testSeasonClass() {
 }
 
 int main() {
-    testSeasonClass();
+    testPlayerClass();
     return 0;
 }
