@@ -623,7 +623,7 @@ public:
     Season(int year, const std::vector <Game*> &games);
     Season(const Season& object);
 
-    void addGame(Game *game);
+    void addGame(const Game& game);
 
     int getYear();
     const std::vector <Game*>& getGames();
@@ -633,6 +633,7 @@ public:
 
     Season &operator =(const Season& object);
     const Game* operator[](int index);
+    friend Season operator + (const Season& season, const Game& game);
     friend std::ostream &operator<<(std::ostream &out, const Season& object);
     friend std::istream &operator>>(std::istream &in, Season& object);
 
@@ -660,8 +661,8 @@ Season::Season(const Season &object): seasonId(idCount++)  {
     this->setGames(object.games);
 }
 
-void Season::addGame(Game *game) {
-    this->games.push_back(game);
+void Season::addGame(const Game& game) {
+    this->games.push_back(new Game(game));
 }
 
 int Season::getYear() {
@@ -710,12 +711,14 @@ std::istream &operator>>(std::istream &in, Season &object) {
     int gamesCount;
     in >> gamesCount;
     while(gamesCount--) {
-        Game *game = new Game();
-        in >> *game;
+        Game game;
+        in >> game;
         object.addGame(game);
     }
     return in;
 }
+
+
 
 Season::~Season() {
     while(!this->games.empty()) {
@@ -726,6 +729,11 @@ Season::~Season() {
     }
 }
 
+Season operator+(const Season &season, const Game &game) {
+    Season temp(season);
+    temp.addGame(game);
+    return temp;
+}
 
 void testPlayerClass() {
     Player a;
