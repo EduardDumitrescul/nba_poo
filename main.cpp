@@ -7,10 +7,10 @@ class Player {
     const int playerId;
 
     char* name = nullptr;
-    int birthYear;
-    float height;
+    int birthYear{};
+    float height{};
     char* position = nullptr;
-    bool injured;
+    bool injured{};
 
 public:
     Player();
@@ -199,7 +199,7 @@ class Team {
     const int teamId;
 
     char* name = nullptr;
-    int gamesPlayed;
+    int gamesPlayed{};
     int* gamesRecord = nullptr;
     std::vector <Player*> playerList;
 
@@ -374,12 +374,12 @@ class Game {
     static int idCount;
     const int gameId;
 
-    Team* homeTeam;
-    Team* awayTeam;
-    Player* mvp;
+    Team* homeTeam{};
+    Team* awayTeam{};
+    Player* mvp{};
 
-    int homeScore;
-    int awayScore;
+    int homeScore{};
+    int awayScore{};
 
 public:
     Game();
@@ -390,8 +390,8 @@ public:
 
     const Team* getHomeTeam();
     const Team* getAwayTeam();
-    int getHomeScore() const;
-    int getAwayScore() const;
+    [[nodiscard]] int getHomeScore() const;
+    [[nodiscard]] int getAwayScore() const;
     const Player* getMvp();
 
     void setHomeTeam(Team* homeTeam);
