@@ -201,23 +201,23 @@ class Team {
     char* name = nullptr;
     int gamesPlayed;
     int* gamesRecord = nullptr;
-    std::vector <Player> playerList;
+    std::vector <Player*> playerList;
 
 public:
     Team();
     Team(const char* name);
     Team(const char* name, int gamesPlayed, const int* gamesRecord);
-    Team(const char* name, int gamesPlayed, const int* gamesRecord, std::vector <Player> players);
+    Team(const char* name, int gamesPlayed, const int* gamesRecord, const std::vector <Player*>& players);
     Team(const Team& object);
 
     const char* getName();
     int getGamesPlayed() const;
     const int* getGamesRecord();
-    std::vector <Player> getPlayers();
+    std::vector <Player*> getPlayers();
 
     void setName(const char* name);
     void setGamesRecord(int gamesPlayed, const int* gamesRecord);
-    void setPlayerList(std::vector <Player> players);
+    void setPlayerList(std::vector <Player*> players);
 
     std::string toString();
 
@@ -243,7 +243,7 @@ const int *Team::getGamesRecord() {
     return this->gamesRecord;
 }
 
-std::vector<Player> Team::getPlayers() {
+std::vector<Player*> Team::getPlayers() {
     return this->playerList;
 }
 
@@ -266,7 +266,7 @@ void Team::setGamesRecord(int gamesPlayed, const int *gamesRecord) {
     }
 }
 
-void Team::setPlayerList(std::vector<Player> players) {
+void Team::setPlayerList(std::vector<Player*> players) {
     this->playerList = players;
 }
 
@@ -288,7 +288,7 @@ Team::Team(const char *name, int gamesPlayed, const int *gamesRecord) : teamId(i
     this->setPlayerList({});
 }
 
-Team::Team(const char *name, int gamesPlayed, const int *gamesRecord, std::vector<Player> players) : teamId(idCount++) {
+Team::Team(const char *name, int gamesPlayed, const int *gamesRecord, const std::vector<Player*>& players) : teamId(idCount++) {
     this->setName(name);
     this->setGamesRecord(gamesPlayed, gamesRecord);
     this->setPlayerList(players);
@@ -325,7 +325,7 @@ std::ostream &operator<<(std::ostream &out, const Team &object) {
     out << '\n';
     out << "Number of Players: " << object.playerList.size() << '\n';
     for(auto player: object.playerList) {
-        out << player.getName() << ' ';
+        out << player->getName() << ' ';
     }
     out << '\n';
     return out;
@@ -581,7 +581,7 @@ void testTeamClass() {
     record[0] = -25, record[1] = 36;
     Team b("team b");
     Player player("player d", 2003, 1.97, "PG", true);
-    Team c("team c", 2, record, {player});
+    Team c("team c", 2, record, {&player});
 
     Team d(c);
     Team e = d;
@@ -623,6 +623,7 @@ void testGameClass() {
 }
 
 int main() {
+    testTeamClass();
     testGameClass();
     return 0;
 }
