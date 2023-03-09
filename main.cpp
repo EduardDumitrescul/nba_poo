@@ -618,21 +618,21 @@ class Season {
     const int seasonId;
 
     int year;
-    std::vector <Game*> games;
+    std::vector <Game> games;
 
 public:
     Season();
     Season(int year);
-    Season(int year, const std::vector <Game*> &games);
+    Season(int year, const std::vector <Game> &games);
     Season(const Season& object);
 
     void addGame(const Game& game);
 
-    int getYear();
-    const std::vector <Game*>& getGames();
+    int getYear() const;
+    const std::vector<Game> & getGames() const;
 
     void setYear(int year);
-    void setGames(const std::vector <Game*> &games);
+    void setGames(const std::vector <Game> &games);
 
     Season &operator =(const Season& object);
     const Game* operator[](int index);
@@ -654,7 +654,7 @@ Season::Season(int year): seasonId(idCount++) {
     this->setGames({});
 }
 
-Season::Season(int year, const std::vector<Game *> &games): seasonId(idCount++)  {
+Season::Season(int year, const std::vector<Game> &games): seasonId(idCount++)  {
     this->setYear(year);
     this->setGames(games);
 }
@@ -665,14 +665,14 @@ Season::Season(const Season &object): seasonId(idCount++)  {
 }
 
 void Season::addGame(const Game& game) {
-    this->games.push_back(new Game(game));
+    this->games.emplace_back(game);
 }
 
-int Season::getYear() {
+int Season::getYear() const {
     return this->year;
 }
 
-const std::vector<Game *>& Season::getGames() {
+const std::vector<Game> & Season::getGames() const {
     return this->games;
 }
 
@@ -680,7 +680,7 @@ void Season::setYear(int year) {
     this->year = year;
 }
 
-void Season::setGames(const std::vector<Game *> &games) {
+void Season::setGames(const std::vector<Game> &games) {
     this->games = games;
 }
 
@@ -692,17 +692,17 @@ Season &Season::operator=(const Season &object) {
     return *this;
 }
 
-const Game *Season::operator[](int index) {
+const Game* Season::operator[](int index) {
     if(index >= this->games.size())
         return nullptr;
-    return this->games[index];
+    return &this->games[index];
 }
 
 std::ostream &operator<<(std::ostream &out, const Season &object) {
     out << "Season Year: " << object.year << '\n';
     out << "Season Games Count: " << object.games.size() << '\n';
     for(auto game: object.games) {
-        out << game->toString() << '\n';
+        out << game.toString() << '\n';
     }
     return out;
 }
@@ -723,14 +723,7 @@ std::istream &operator>>(std::istream &in, Season &object) {
 
 
 
-Season::~Season() {
-    while(!this->games.empty()) {
-        if(this->games.back() != nullptr) {
-            delete this->games.back();
-        }
-        this->games.pop_back();
-    }
-}
+Season::~Season() = default;
 
 Season operator+(const Season &season, const Game &game) {
     Season temp(season);
