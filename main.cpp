@@ -844,6 +844,20 @@ void testSeasonClass() {
     std::cout << s;
 }
 
+void testSeasonGameAddition() {
+    Game g1;
+    Game g2;
+    Season s1(2003);
+    Season s2(102);
+
+    std::cout << s1 + g1 << '\n';
+    std::cout << g1 + s1 << '\n';
+    std::cout << s1 + s2 << '\n';
+    std::cout << g1 + g2 << '\n';
+
+
+}
+
 int main() {
     testPlayerClass();
     return 0;
