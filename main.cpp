@@ -357,6 +357,9 @@ Team::Team(const Team &object) : teamId(idCount++) {
 }
 
 std::string Team::toString() {
+    if(this == nullptr) {
+        return "NULL";
+    }
     std::string output = (this->name == nullptr) ? "null" : this->name;
     output += " ; gamesPlayed: " + std::to_string(this->gamesPlayed);
     output += " ; playerCount: " + std::to_string(this->playerList.size());
