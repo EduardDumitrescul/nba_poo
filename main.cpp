@@ -301,7 +301,7 @@ Team::Team(const Team &object) : teamId(idCount++) {
 }
 
 std::string Team::toString() {
-    std::string output = this->name;
+    std::string output = (this->name == nullptr) ? "null" : this->name;
     output += " ; gamesPlayed: " + std::to_string(this->gamesPlayed);
     output += " ; playerCount: " + std::to_string(this->playerList.size());
     return output;
@@ -374,13 +374,174 @@ class Game {
     static int idCount;
     const int gameId;
 
-    Team homeTeam;
-    Team awayTeam;
-    Player mvp;
+    Team* homeTeam;
+    Team* awayTeam;
+    Player* mvp;
 
-    int homeTeamScore;
-    int awayTeamScore;
+    int homeScore;
+    int awayScore;
+
+public:
+    Game();
+    Game(Team* homeTeam, Team* awayTeam);
+    Game(Team* homeTeam, Team* awayTeam, int homeScore, int awayScore);
+    Game(Team* homeTeam, Team* awayTeam, int homeScore, int awayScore, Player* mvp);
+    Game(const Game& object);
+
+    const Team* getHomeTeam();
+    const Team* getAwayTeam();
+    int getHomeScore() const;
+    int getAwayScore() const;
+    const Player* getMvp();
+
+    void setHomeTeam(Team* homeTeam);
+    void setAwayTeam(Team* awayTeam);
+    void setMvp(Player* mvp);
+    void setHomeScore(int homeScore);
+    void setAwayScore(int awayScore);
+
+    Game& operator=(const Game& object);
+
+    friend std::ostream& operator<<(std::ostream& out, const Game& object);
+    friend std::istream& operator>>(std::istream& in, Game& object);
+
+    std::string toString();
+
+    ~Game();
 };
+
+int Game::idCount = 1000;
+
+Game::Game(): gameId(idCount++) {
+    this->setHomeTeam(nullptr);
+    this->setAwayTeam(nullptr);
+    this->setHomeScore(0);
+    this->setAwayScore(0);
+    this->setMvp(nullptr);
+}
+
+Game::Game(Team *homeTeam, Team *awayTeam): gameId(idCount++) {
+    this->setHomeTeam(homeTeam);
+    this->setAwayTeam(awayTeam);
+    this->setHomeScore(0);
+    this->setAwayScore(0);
+    this->setMvp(nullptr);
+}
+
+Game::Game(Team* homeTeam, Team* awayTeam, int homeScore, int awayScore): gameId(idCount++) {
+    this->setHomeTeam(homeTeam);
+    this->setAwayTeam(awayTeam);
+    this->setHomeScore(homeScore);
+    this->setAwayScore(awayScore);
+    this->setMvp(nullptr);
+}
+
+Game::Game(Team* homeTeam, Team* awayTeam, int homeScore, int awayScore, Player* mvp): gameId(idCount++) {
+    this->setHomeTeam(homeTeam);
+    this->setAwayTeam(awayTeam);
+    this->setHomeScore(homeScore);
+    this->setAwayScore(awayScore);
+    this->setMvp(mvp);
+}
+
+Game::Game(const Game &object): gameId(idCount++) {
+    this->setHomeTeam(object.homeTeam);
+    this->setAwayTeam(object.awayTeam);
+    this->setHomeScore(object.homeScore);
+    this->setAwayScore(object.awayScore);
+    this->setMvp(object.mvp);
+}
+
+const Team* Game::getHomeTeam() {
+    return this->homeTeam;
+}
+
+const Team* Game::getAwayTeam() {
+    return this->awayTeam;
+}
+
+int Game::getHomeScore() const {
+    return this->homeScore;
+}
+
+int Game::getAwayScore() const {
+    return this->awayScore;
+}
+
+const Player* Game::getMvp() {
+    return this->mvp;
+}
+
+void Game::setHomeTeam(Team* homeTeam) {
+    this->homeTeam = homeTeam;
+}
+
+void Game::setAwayTeam(Team* awayTeam) {
+    this->awayTeam = awayTeam;
+}
+
+void Game::setMvp(Player* mvp) {
+    this->mvp = mvp;
+}
+
+void Game::setHomeScore(int homeScore) {
+    this->homeScore = homeScore;
+}
+
+void Game::setAwayScore(int awayScore) {
+    this->awayScore = awayScore;
+}
+
+Game &Game::operator=(const Game &object) {
+    if(this != &object) {
+        this->setHomeTeam(object.homeTeam);
+        this->setAwayTeam(object.awayTeam);
+        this->setHomeScore(object.homeScore);
+        this->setAwayScore(object.awayScore);
+        this->setMvp(object.mvp);
+    }
+    return *this;
+}
+
+std::ostream &operator<<(std::ostream &out, const Game &object) {
+    out << "ID: " << object.gameId << '\n';
+    out << "Home Team: " << (object.homeTeam == nullptr ? "null" : object.homeTeam->toString()) << '\n';
+    out << "Away Team: " << (object.awayTeam == nullptr ? "null" : object.awayTeam->toString()) << '\n';
+    out << "Home Score: " << object.homeScore << '\n';
+    out << "Away Score: " << object.awayScore << '\n';
+    out << "MVP: " << (object.mvp == nullptr ? "null" : object.mvp->toString()) << '\n';
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Game &object) {
+    Team *home = new Team();
+    Team *away = new Team();
+    Player *player = new Player();
+    std::cout << "Insert Home Team Information..." << '\n';
+    in >> *home;
+    std::cout << "Insert Away Team Information..." << '\n';
+    in >> *away;
+    std::cout << "Insert Home Score: ";
+    in >> object.homeScore;
+    std::cout << "Insert Away Score: ";
+    in >> object.awayScore;
+    std::cout << "Insert MVP information..." << '\n';
+    in >> *player;
+    object.setMvp(player);
+    object.setHomeTeam(home);
+    object.setAwayTeam(away);
+
+    return in;
+}
+
+std::string Game::toString() {
+    std::string output = std::to_string(this->gameId) + ": " + this->homeTeam->toString() + " " + std::to_string(this->homeScore)  + " - " + std::to_string(this->awayScore) + " " + this->awayTeam->toString();
+    return output;
+}
+
+Game::~Game() {
+
+}
 
 class Season {
     static int idCount;
@@ -438,7 +599,30 @@ void testTeamClass() {
     std::cin >> team;
     std::cout << team << '\n';
 }
+
+void testGameClass() {
+    Game a;
+    Team home("home");
+    Team away("away");
+    Player mvp("mvp");
+
+    Game b(&home, &away);
+    Game c(&home, &away, 123, 321);
+    Game d(&home, &away, 123, 321, &mvp);
+    Game e(d);
+    Game f = e;
+
+    e.setAwayTeam(&home);
+    e.setHomeTeam(&away);
+
+    std::cout << a << b << c << d << e << f;
+
+
+    std::cin >> a;
+    std::cout << a;
+}
+
 int main() {
-    testTeamClass();
+    testGameClass();
     return 0;
 }
