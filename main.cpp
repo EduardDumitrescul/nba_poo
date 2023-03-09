@@ -659,7 +659,7 @@ Season::~Season() {
         if(this->games.back() != nullptr) {
             delete this->games.back();
         }
-        this->games.pop_back()
+        this->games.pop_back();
     }
 }
 
