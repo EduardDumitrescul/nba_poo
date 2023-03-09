@@ -540,7 +540,18 @@ std::string Game::toString() {
 }
 
 Game::~Game() {
-
+    if(this->homeTeam != nullptr) {
+        delete this->homeTeam;
+        this->homeTeam = nullptr;
+    }
+    if(this->awayTeam != nullptr) {
+        delete this->awayTeam;
+        this->awayTeam = nullptr;
+    }
+    if(this->mvp != nullptr) {
+        delete this->mvp;
+        this->mvp = nullptr;
+    }
 }
 
 class Season {
@@ -567,6 +578,8 @@ public:
     Season &operator =(const Season& object);
     friend std::ostream &operator<<(std::ostream &out, const Season& object);
     friend std::istream &operator>>(std::istream &in, Season& object);
+
+    ~Season();
 };
 int Season::idCount = 1000;
 
@@ -639,6 +652,15 @@ std::istream &operator>>(std::istream &in, Season &object) {
         object.addGame(game);
     }
     return in;
+}
+
+Season::~Season() {
+    while(!this->games.empty()) {
+        if(this->games.back() != nullptr) {
+            delete this->games.back();
+        }
+        this->games.pop_back()
+    }
 }
 
 
