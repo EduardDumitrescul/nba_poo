@@ -859,6 +859,6 @@ void testSeasonGameAddition() {
 }
 
 int main() {
-    testPlayerClass();
+    testSeasonGameAddition();
     return 0;
 }
