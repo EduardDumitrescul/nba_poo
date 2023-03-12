@@ -437,17 +437,6 @@ std::istream &operator>>(std::istream &in, Team &object) {
 //    }
 //    object.setGamesRecord(object.gamesPlayed, record);
 
-    int *record = new int[object.gamesPlayed];
-
-    for(int i = 0; i < object.gamesPlayed; i ++) {
-        std::cout << "Record for game " << i + 1 << ": ";
-        in >> record[i];
-    }
-    object.setGamesRecord(object.gamesPlayed, record);
-    if(record != nullptr) {
-        delete[] record;
-        record = nullptr;
-    }
     return in;
 }
 
