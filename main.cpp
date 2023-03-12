@@ -937,15 +937,28 @@ public:
     void seeAllPlayers();
     void addPlayer();
     void editPLayer();
+    void seeAllTeams();
+    void addTeam();
+    void editTeam();
+
+    Player* getPlayer(int id);
+    bool removePlayer(int id);
+    Team* getTeam(int id);
+    bool removeTeam(int id);
 };
 
 void Demo::run() {
     bool running = true;
     while(running) {
         std::cout << "[0] -> exit\n";
+
         std::cout << "[11] -> see all players\n";
         std::cout << "[12] -> add player\n";
         std::cout << "[13] -> edit player\n";
+
+        std::cout << "[21] -> see all teams\n";
+        std::cout << "[22] -> add team\n";
+        std::cout << "[23] -> edit team\n";
 
         int command;
         std::cin >> command;
@@ -966,6 +979,18 @@ void Demo::run() {
                 this->editPLayer();
                 break;
             }
+            case 21: {
+                this->seeAllTeams();
+                break;
+            }
+            case 22: {
+                this->addTeam();
+                break;
+            }
+            case 23: {
+                this->editTeam();
+                break;
+            }
             default: {
                 std::cout << "UNRECOGNIZED COMMAND\n";
                 break;
@@ -975,8 +1000,47 @@ void Demo::run() {
     }
 }
 
+Player* Demo::getPlayer(int id) {
+    Player* player = nullptr;
+    for(int i = 0; i < this->players.size(); i ++) {
+        if(this->players[i].getId() == id) {
+            player = &this->players[i];
+            break;
+        }
+    }
+    return player;
+}
+bool Demo::removePlayer(int id) {
+    for(int i = 0; i < this->players.size(); i ++) {
+        if(this->players[i].getId() == id) {
+            this->players.erase(this->players.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+Team* Demo::getTeam(int id) {
+    Team* team = nullptr;
+    for(auto & i : this->teams) {
+        if(i.getId() == id) {
+            team = &i;
+            break;
+        }
+    }
+    return team;
+}
+bool Demo::removeTeam(int id) {
+    for(int i = 0; i < this->teams.size(); i ++) {
+        if(this->teams[i].getId() == id) {
+            this->teams.erase(this->teams.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
 void Demo::seeAllPlayers() {
-    for(const auto& player: players) {
+    for(const auto& player: this->players) {
         std::cout << player;
     }
 }
@@ -984,7 +1048,7 @@ void Demo::seeAllPlayers() {
 void Demo::addPlayer() {
     Player player;
     std::cin >> player;
-    players.push_back(player);
+    this->players.push_back(player);
     std::cout << "Player added successfully!\n";
 }
 
@@ -992,15 +1056,7 @@ void Demo::editPLayer() {
     std::cout << "Insert the ID of the player: ";
     int id;
     std::cin >> id;
-    Player* player = nullptr;
-    int pos = 0;
-    for(int i = 0; i < this->players.size(); i ++) {
-        if(this->players[i].getId() == id) {
-            player = &this->players[i];
-            pos = i;
-            break;
-        }
-    }
+    Player* player = this->getPlayer(id);
     if(player == nullptr) {
         std::cout << "Invalid ID!\n";
         return;
@@ -1067,8 +1123,86 @@ void Demo::editPLayer() {
                 break;
             }
             case 7: {
-                this->players.erase(this->players.begin() + pos);
+                this->removePlayer(id);
                 running = false;
+                break;
+            }
+            default: {
+                std::cout << "UNRECOGNIZED COMMAND!\n";
+                break;
+            }
+        }
+    }
+}
+
+void Demo::seeAllTeams() {
+    for(const auto& team: this->teams) {
+        std::cout << team;
+    }
+}
+
+void Demo::addTeam() {
+    Team team;
+    std::cin >> team;
+    this->teams.push_back(team);
+    std::cout << "Team added successfully!\n";
+}
+
+void Demo::editTeam() {
+    std::cout << "Insert the ID of the team: ";
+    int id;
+    std::cin >> id;
+    Team* team = Demo::getTeam(id);
+    if(team == nullptr) {
+        std::cout << "Invalid ID!\n";
+        return;
+    }
+
+    bool running = true;
+    while(running) {
+        std::cout << "[0] -> back\n";
+        std::cout << "[1] -> change name\n";
+        std::cout << "[2] -> add player\n";
+        std::cout << "[3] -> remove player\n";
+        std::cout << "[4] -> delete\n";
+
+        int command;
+        std::cin >> command;
+        switch(command) {
+            case 0: {
+                running = false;
+                break;
+            }
+            case 1: {
+                char name[200];
+                std::cout << "Insert name (char*, max 200 characters): ";
+                std::cin >> name;
+                team->setName(name);
+                break;
+            }
+            case 2: {
+                int playerId;
+                std::cout << "Insert player ID: ";
+                std::cin >> playerId;
+                Player* player = Demo::getPlayer(playerId);
+                if(player == nullptr) {
+                    std::cout << "Invalid ID!\n";
+                }
+                else {
+                    team->addPlayer(player);
+                    std::cout << "Player added successfully!\n";
+                }
+                break;
+            }
+            case 3: {
+                int playerId;
+                std::cout << "Insert player ID to remove from team: ";
+                std::cin >> playerId;
+                    team->removePlayer(playerId);
+                break;
+            }
+            case 4: {
+                this->removeTeam(id);
                 break;
             }
             default: {
