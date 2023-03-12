@@ -20,6 +20,7 @@ public:
     Player(const char* name, int birthYear, float height, int ovr = 50, const char* position = "unknown", bool injured = false);
     Player(const Player& object);
 
+    int getId();
     const char* getName();
     int getBirthYear() const;
     float getHeight() const;
@@ -122,6 +123,10 @@ void Player::setPosition(const char *position) {
 
 void Player::setInjured(bool injured) {
     this->injured = injured;
+}
+
+int Player::getId() {
+    return this->playerId;
 }
 
 const char *Player::getName() {
@@ -905,7 +910,160 @@ void testSeasonGameAddition() {
 
 }
 
+class Demo {
+    std::vector <Player> players;
+    std::vector <Team> teams;
+    Season season;
+
+public:
+    void run();
+    void seeAllPlayers();
+    void addPlayer();
+    void editPLayer();
+};
+
+void Demo::run() {
+    bool running = true;
+    while(running) {
+        std::cout << "[0] -> exit\n";
+        std::cout << "[1] -> see all players\n";
+        std::cout << "[2] -> add player\n";
+        std::cout << "[3] -> edit player\n";
+
+        int command;
+        std::cin >> command;
+        switch (command) {
+            case 0: {
+                running = false;
+                break;
+            }
+            case 1: {
+                this->seeAllPlayers();
+                break;
+            }
+            case 2: {
+                this->addPlayer();
+                break;
+            }
+            case 3: {
+                this->editPLayer();
+                break;
+            }
+            default: {
+                std::cout << "UNRECOGNIZED COMMAND\n";
+                break;
+            }
+        }
+        std::cout << "----------------------------|\n";
+    }
+}
+
+void Demo::seeAllPlayers() {
+    for(const auto& player: players) {
+        std::cout << player;
+    }
+}
+
+void Demo::addPlayer() {
+    Player player;
+    std::cin >> player;
+    players.push_back(player);
+    std::cout << "Player added successfully!\n";
+}
+
+void Demo::editPLayer() {
+    std::cout << "Insert the ID of the player: ";
+    int id;
+    std::cin >> id;
+    Player* player = nullptr;
+    int pos = 0;
+    for(int i = 0; i < this->players.size(); i ++) {
+        if(this->players[i].getId() == id) {
+            player = &this->players[i];
+            pos = i;
+            break;
+        }
+    }
+    if(player == nullptr) {
+        std::cout << "Invalid ID!\n";
+        return;
+    }
+
+    bool running = true;
+    while(running) {
+        std::cout << "[0] -> back\n";
+        std::cout << "[1] -> change name\n";
+        std::cout << "[2] -> change ovr\n";
+        std::cout << "[3] -> change position\n";
+        std::cout << "[4] -> change injured status\n";
+        std::cout << "[5] -> change birth year\n";
+        std::cout << "[6] -> change height\n";
+        std::cout << "[7] -> delete\n";
+
+        int command;
+        std::cin >> command;
+        switch(command) {
+            case 0: {
+                running = false;
+                break;
+            }
+            case 1: {
+                char name[200];
+                std::cout << "Insert name (char*, max 200 characters): ";
+                std::cin >> name;
+                player->setName(name);
+                break;
+            }
+            case 2: {
+                int ovr;
+                std::cout << "Insert ovr (int 40-100): ";
+                std::cin >> ovr;
+                player->setOvr(ovr);
+                break;
+            }
+            case 3: {
+                char position[20];
+                std::cout << "Insert position (char*, max 20 characters): ";
+                std::cin >> position;
+                player->setPosition(position);
+                break;
+            }
+            case 4: {
+                bool injured;
+                std::cout << "Insert injured status (bool): ";
+                std::cin >> injured;
+                player->setInjured(injured);
+                break;
+            }
+            case 5: {
+                int birthYear;
+                std::cout << "Insert birth year (int): ";
+                std::cin >> birthYear;
+                player->setBirthYear(birthYear);
+                break;
+            }
+            case 6: {
+                float height;
+                std::cout << "Insert height(float): ";
+                std::cin >> height;
+                player->setHeight(height);
+                break;
+            }
+            case 7: {
+                this->players.erase(this->players.begin() + pos);
+                running = false;
+                break;
+            }
+            default: {
+                std::cout << "UNRECOGNIZED COMMAND!\n";
+                break;
+            }
+        }
+    }
+}
+
 int main() {
-    testSeasonGameAddition();
+    Demo demo;
+    demo.run();
     return 0;
 }
