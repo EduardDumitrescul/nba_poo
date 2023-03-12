@@ -274,6 +274,10 @@ public:
     Team(const char* name, int gamesPlayed, const int* gamesRecord, const std::vector <Player*>& players);
     Team(const Team& object);
 
+    bool removePlayer(int playerId);
+    void addPlayer(Player* player);
+
+    int getId();
     const char* getName();
     int getGamesPlayed() const;
     const int* getGamesRecord();
@@ -294,6 +298,24 @@ public:
 };
 
 int Team::idCount = 1000;
+
+bool Team::removePlayer(int playerId) {
+    for(int i = 0; i < this->playerList.size(); i ++) {
+        if(this->playerList[i]->getId() == playerId) {
+            this->playerList.erase(this->playerList.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
+void Team::addPlayer(Player* const player) {
+    this->playerList.push_back(player);
+}
+
+int Team::getId() {
+    return this->teamId;
+}
 
 const char *Team::getName() {
     return this->name;
