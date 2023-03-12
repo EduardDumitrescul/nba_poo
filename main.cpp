@@ -216,7 +216,7 @@ std::ostream &operator<<(std::ostream &out, const Player &object) {
 }
 
 std::istream &operator>>(std::istream &in, Player &object) {
-    char* playerName = new char[200];
+    char playerName[200];
     std::cout << "Insert player name: ";
     in >> playerName;
     object.setName(playerName);
@@ -230,7 +230,7 @@ std::istream &operator>>(std::istream &in, Player &object) {
     std::cout << "Insert player height: ";
     in >> height;
     object.setHeight(height);
-    char* position = new char[20];
+    char position[20];
     std::cout << "Insert player position: ";
     in >> position;
     object.setPosition(position);
@@ -590,6 +590,19 @@ std::istream &operator>>(std::istream &in, Game &object) {
     object.setHomeTeam(home);
     object.setAwayTeam(away);
 
+    if(home != nullptr) {
+        delete home;
+        home = nullptr;
+    }
+    if(away != nullptr) {
+        delete away;
+        away = nullptr;
+    }
+    if(player != nullptr) {
+        delete player;
+        player = nullptr;
+    }
+
     return in;
 }
 
@@ -806,6 +819,12 @@ void testTeamClass() {
     Team team;
     std::cin >> team;
     std::cout << team << '\n';
+
+    if(record != nullptr) {
+        delete[] record;
+        record = nullptr;
+    }
+
 }
 
 void testGameClass() {
