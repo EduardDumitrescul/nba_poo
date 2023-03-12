@@ -1113,7 +1113,8 @@ void Demo::editPLayer() {
             case 1: {
                 char name[200];
                 std::cout << "Insert name (char*, max 200 characters): ";
-                std::cin >> name;
+                std::cin.get();
+                std::cin.getline(name, 200);
                 player->setName(name);
                 break;
             }
@@ -1127,7 +1128,8 @@ void Demo::editPLayer() {
             case 3: {
                 char position[20];
                 std::cout << "Insert position (char*, max 20 characters): ";
-                std::cin >> position;
+                std::cin.get();
+                std::cin.getline(position, 20);
                 player->setPosition(position);
                 break;
             }
