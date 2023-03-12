@@ -926,9 +926,9 @@ void Demo::run() {
     bool running = true;
     while(running) {
         std::cout << "[0] -> exit\n";
-        std::cout << "[1] -> see all players\n";
-        std::cout << "[2] -> add player\n";
-        std::cout << "[3] -> edit player\n";
+        std::cout << "[11] -> see all players\n";
+        std::cout << "[12] -> add player\n";
+        std::cout << "[13] -> edit player\n";
 
         int command;
         std::cin >> command;
@@ -937,15 +937,15 @@ void Demo::run() {
                 running = false;
                 break;
             }
-            case 1: {
+            case 11: {
                 this->seeAllPlayers();
                 break;
             }
-            case 2: {
+            case 12: {
                 this->addPlayer();
                 break;
             }
-            case 3: {
+            case 13: {
                 this->editPLayer();
                 break;
             }
