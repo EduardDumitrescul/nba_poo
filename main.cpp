@@ -206,6 +206,7 @@ bool operator==(const Player &object, const Player &other) {
 
 
 std::ostream &operator<<(std::ostream &out, const Player &object) {
+    out << "Player Id: " << object.playerId << '\n';
     out << "Player name: " << object.name << '\n';
     out << "Player's overall rating: " << object.ovr << '\n';
     out << "Player birth year: " << object.birthYear << '\n';
