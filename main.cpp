@@ -224,6 +224,7 @@ std::ostream &operator<<(std::ostream &out, const Player &object) {
 std::istream &operator>>(std::istream &in, Player &object) {
     char playerName[200];
     std::cout << "Insert player name: ";
+    in.get();
     in.getline(playerName, 200);
     object.setName(playerName);
     std::cout << "Insert player's ovr: ";
@@ -240,6 +241,7 @@ std::istream &operator>>(std::istream &in, Player &object) {
     object.setHeight(height);
     char position[20];
     std::cout << "Insert player position: ";
+    in.get();
     in.getline(position, 20);
     object.setPosition(position);
     bool injured;
@@ -423,6 +425,7 @@ std::ostream &operator<<(std::ostream &out, const Team &object) {
 std::istream &operator>>(std::istream &in, Team &object) {
     std::cout << "Insert team name: ";
     char name[200];
+    in.get();
     in.getline(name, 200);
     object.setName(name);
 
