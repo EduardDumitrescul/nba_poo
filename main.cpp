@@ -224,7 +224,7 @@ std::ostream &operator<<(std::ostream &out, const Player &object) {
 std::istream &operator>>(std::istream &in, Player &object) {
     char playerName[200];
     std::cout << "Insert player name: ";
-    in >> playerName;
+    in.getline(playerName, 200);
     object.setName(playerName);
     std::cout << "Insert player's ovr: ";
     int ovr;
@@ -240,7 +240,7 @@ std::istream &operator>>(std::istream &in, Player &object) {
     object.setHeight(height);
     char position[20];
     std::cout << "Insert player position: ";
-    in >> position;
+    in.getline(position, 20);
     object.setPosition(position);
     bool injured;
     std::cout << "Is player injured? [0/1]: ";
@@ -400,17 +400,20 @@ std::ostream &operator<<(std::ostream &out, const Team &object) {
 
 std::istream &operator>>(std::istream &in, Team &object) {
     std::cout << "Insert team name: ";
-    char* name = new char[100];
-    in >> name;
+    char name[200];
+    in.getline(name, 200);
     object.setName(name);
-    if(name != nullptr) {
-        delete[] name;
-        name = nullptr;
 
-    }
-
-    std::cout << "Games Played: ";
-    in >> object.gamesPlayed;
+//    std::cout << "Games Played: ";
+//    in >> object.gamesPlayed;
+//
+//    int record[object.gamesPlayed];
+//
+//    for(int i = 0; i < object.gamesPlayed; i ++) {
+//        std::cout << "Record for game " << i + 1 << ": ";
+//        in >> record[i];
+//    }
+//    object.setGamesRecord(object.gamesPlayed, record);
 
     int *record = new int[object.gamesPlayed];
 
