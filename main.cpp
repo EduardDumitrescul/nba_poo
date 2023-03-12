@@ -221,7 +221,9 @@ std::istream &operator>>(std::istream &in, Player &object) {
     in >> playerName;
     object.setName(playerName);
     std::cout << "Insert player's ovr: ";
-    in >> object.ovr;
+    int ovr;
+    in >> ovr;
+    object.setOvr(ovr);
     int birthYear;
     std::cout << "Insert player birth year: ";
     in >> birthYear;
