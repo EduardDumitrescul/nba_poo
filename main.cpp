@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <deque>
 
 class Player {
     static int idCount;
@@ -311,7 +312,7 @@ bool Team::removePlayer(int playerId) {
     return false;
 }
 
-void Team::addPlayer(Player* const player) {
+void Team::addPlayer(Player* player) {
     this->playerList.push_back(player);
 }
 
@@ -928,18 +929,21 @@ void testSeasonGameAddition() {
 }
 
 class Demo {
-    std::vector <Player> players;
-    std::vector <Team> teams;
+    std::deque <Player> players;
+    std::deque <Team> teams;
     Season season;
 
 public:
     void run();
     void seeAllPlayers();
     void addPlayer();
+    int addPlayer(const Player &player);
     void editPLayer();
     void seeAllTeams();
     void addTeam();
+    void addTeam(const Team &team);
     void editTeam();
+    void loadDefaultData();
 
     Player* getPlayer(int id);
     bool removePlayer(int id);
@@ -959,6 +963,8 @@ void Demo::run() {
         std::cout << "[21] -> see all teams\n";
         std::cout << "[22] -> add team\n";
         std::cout << "[23] -> edit team\n";
+
+        std::cout << "[99] -> load default data\n";
 
         int command;
         std::cin >> command;
@@ -991,12 +997,30 @@ void Demo::run() {
                 this->editTeam();
                 break;
             }
+            case 99: {
+                this->loadDefaultData();
+                break;
+            }
             default: {
                 std::cout << "UNRECOGNIZED COMMAND\n";
                 break;
             }
         }
         std::cout << "----------------------------|\n";
+    }
+}
+
+void Demo::loadDefaultData() {
+    srand(time(nullptr));
+    for(int i = 0; i < 4; i ++) {
+        std::string name = "Team #" + std::to_string(i);
+        this->addTeam(Team(name.c_str()));
+    }
+    for(int i = 0; i < 20; i ++) {
+        std::string name = "Player #" + std::to_string(i);
+        Player player(name.c_str(), 1980 + rand() % 30, (180 + rand() % 40) / 100.0 ,rand() % 60 + 40, "pos", false);
+        int id = this->addPlayer(player);
+        this->teams[i/5].addPlayer(this->getPlayer(id));
     }
 }
 
@@ -1050,6 +1074,12 @@ void Demo::addPlayer() {
     std::cin >> player;
     this->players.push_back(player);
     std::cout << "Player added successfully!\n";
+}
+
+int Demo::addPlayer(const Player &player) {
+    this->players.push_back(player);
+    return this->players.back().getId();
+
 }
 
 void Demo::editPLayer() {
@@ -1146,6 +1176,10 @@ void Demo::addTeam() {
     std::cin >> team;
     this->teams.push_back(team);
     std::cout << "Team added successfully!\n";
+}
+
+void Demo::addTeam(const Team& team) {
+    this->teams.push_back(team);
 }
 
 void Demo::editTeam() {
